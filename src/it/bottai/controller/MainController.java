@@ -1,4 +1,4 @@
-package it.bottai;
+package it.bottai.controller;
 
 public class MainController {
 }
