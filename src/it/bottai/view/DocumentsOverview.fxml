@@ -19,8 +19,8 @@
                      <children>
                         <TableView prefHeight="398.0" prefWidth="417.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" fx:id="documentTable">
                           <columns>
-                            <TableColumn prefWidth="178.0" text="PDF" fx:id="PDF"/>
-                            <TableColumn prefWidth="139.0" text="CSV" fx:id="CSV"/>
+                            <TableColumn prefWidth="178.0" text="PDF" fx:id="PDFList"/>
+                            <TableColumn prefWidth="139.0" text="CSV" fx:id="CSVList"/>
                           </columns>
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -35,7 +35,7 @@
                   <ButtonBar prefHeight="100.0" prefWidth="600.0">
                   </ButtonBar>
                   <Button layoutX="418.0" layoutY="38.0" mnemonicParsing="false" text="Delete" />
-                  <Button layoutX="50.0" layoutY="38.0" mnemonicParsing="false" text="Find" />
+                  <Button layoutX="50.0" layoutY="38.0" mnemonicParsing="false" text="Find" onAction="#openMultipleButton"/>
                   <Button layoutX="494.0" layoutY="38.0" mnemonicParsing="false" text="Start" />
                </children>
             </AnchorPane>

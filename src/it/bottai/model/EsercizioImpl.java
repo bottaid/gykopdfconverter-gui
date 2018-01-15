@@ -2,18 +2,25 @@ package it.bottai.model;
 
 import javafx.beans.property.StringProperty;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class EsercizioImpl implements Esercizio {
 
     private String nomeFile;
+    private File pdfFile;
     private ArrayList<String> righeTabella;
     private StringProperty primaColonna;
     private StringProperty secondaColonna;
 
     public EsercizioImpl(String nomeFile){
         this.nomeFile = nomeFile;
+    }
+
+    public EsercizioImpl(String nomeFile, File pdfFile){
+        this.nomeFile = nomeFile;
+        this.pdfFile = pdfFile;
     }
 
     public String getNomeFile(){
