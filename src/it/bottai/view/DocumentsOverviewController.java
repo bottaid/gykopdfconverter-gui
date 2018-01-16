@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
@@ -29,9 +30,9 @@ public class DocumentsOverviewController {
     @FXML
     private TableView<Esercizio> documentTable;
     @FXML
-    private TableColumn<Esercizio, String> PDFList;
+    private ListView<String> PDFList;
     @FXML
-    private TableColumn<Esercizio, String> CSVList;
+    private ListView<String> CSVList;
 
     private Main mainApp;
 
@@ -49,15 +50,6 @@ public class DocumentsOverviewController {
     //Il costruttore che viene chiamato prima di initialize()
     public DocumentsOverviewController() {
     }
-
-    //Inizializza la tabella con le due colonne
-    @FXML
-    private void initialize() {
-        // Initialize the person table with the two columns.
-        PDFList.setCellValueFactory(cellData -> cellData.getValue().primaColonnaProperty());
-        CSVList.setCellValueFactory(cellData -> cellData.getValue().secondaColonnaProperty());
-    }
-
 
     @FXML
     protected void openMultipleButton(ActionEvent event) throws FileNotFoundException{
