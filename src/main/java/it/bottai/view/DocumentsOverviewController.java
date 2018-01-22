@@ -6,6 +6,8 @@ import it.bottai.model.EsercizioImpl;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableListBase;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,8 +30,6 @@ import java.util.logging.Logger;
 public class DocumentsOverviewController {
 
     @FXML
-    private TableView<Esercizio> documentTable;
-    @FXML
     private ListView<String> PDFList;
     @FXML
     private ListView<String> CSVList;
@@ -40,10 +40,10 @@ public class DocumentsOverviewController {
 
     private Desktop desktop = Desktop.getDesktop();
 
-    private ObservableList<Esercizio> documentEsercizioList = FXCollections.observableArrayList();
+    private ObservableList<EsercizioImpl> documentEsercizioList = FXCollections.observableArrayList();
 
     //Questa funzione restituisce i documenti sotto forma di lista
-    public ObservableList<Esercizio> getDocumentEsercizioList() {
+    public ObservableList<EsercizioImpl> getDocumentEsercizioList() {
         return documentEsercizioList;
     }
 
@@ -56,6 +56,7 @@ public class DocumentsOverviewController {
         configureFileChooser(fileChooser);
         List<File> pdfFileList = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
         System.out.println(pdfFileList);
+        initPdfListColumn(pdfFileList);
     }
 
     //Questa funzione si posiziona nella cartella contenente i PDF da analizzare
@@ -72,14 +73,16 @@ public class DocumentsOverviewController {
         this.mainApp = mainApp;
     }
 
-    public void setDocumentTable(){
+    public void setPdfDocumentListView(){
         // Add observable list data to the table
-        documentTable.setItems(getDocumentEsercizioList());
+        ObservableList<String> filenameList = FXCollections.observableArrayList();
+        for (EsercizioImpl esercizio: documentEsercizioList){
+            filenameList.add(esercizio.getNomeFile());
+            System.out.println("Elemento inserito");
+        }
+        PDFList.setItems(filenameList);
     }
 
-    public void setPdfColumn(){
-
-    }
 
     public void addPdfToColumn(Esercizio doc, String docName){
 
@@ -88,9 +91,9 @@ public class DocumentsOverviewController {
 
     public void initPdfListColumn(List<File> pdfFileList){
         for (File file : pdfFileList){
-            Esercizio doc = new EsercizioImpl(file.getName(), file);
+            EsercizioImpl doc = new EsercizioImpl(file.getName(), file);
             documentEsercizioList.add(doc);
         }
-        setDocumentTable();
+        setPdfDocumentListView();
     }
 }

@@ -24,7 +24,7 @@
                         <HBox alignment="CENTER">
                            <children>
                               <ListView fx:id="PDFList" prefHeight="400.0" prefWidth="350.0" accessibleText="PDFList"/>
-                              <ListView fx:id="CSVList" prefHeight="400.0" prefWidth="350.0" />
+                              <ListView fx:id="CSVList" prefHeight="400.0" prefWidth="350.0" accessibleText="CSVList"/>
                            </children>
                         </HBox>
                      </children>
