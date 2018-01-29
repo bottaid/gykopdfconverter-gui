@@ -33,9 +33,8 @@
             </SplitPane>
             <AnchorPane prefHeight="100.0" prefWidth="300.0">
                <children>
-                  <ButtonBar prefHeight="100.0" prefWidth="400.0">
-                  </ButtonBar>
                   <Button layoutX="830.0" layoutY="38.0" mnemonicParsing="false" text="Delete" />
+                   <Button layoutX="660.0" layoutY="38.0" mnemonicParsing="false" onAction="#saveCsvList" text="Save" />
                   <Button layoutX="750.0" layoutY="38.0" mnemonicParsing="false" onAction="#openMultipleButton" text="Find PDF" />
                   <Button layoutX="900.0" layoutY="38.0" mnemonicParsing="false" onAction="#startConversion" text="Start" />
                </children>

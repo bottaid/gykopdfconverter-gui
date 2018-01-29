@@ -1,5 +1,6 @@
 package it.bottai.model;
 
+import it.bottai.view.DocumentsOverviewController;
 import javafx.beans.property.StringProperty;
 
 import java.io.BufferedWriter;
@@ -76,6 +77,8 @@ public class EsercizioImpl implements Esercizio {
         return secondaColonna;
     }
 
+
+
     @Override
     //Estraggo le righe dalla tabella
     public void estraiRigheTabella() {
@@ -97,15 +100,15 @@ public class EsercizioImpl implements Esercizio {
 
     @Override
     //Scrivo le righe estratte sul documento csv
-    public void scriviRigheTabella(ArrayList<String> righeTabella, String outputDir, String filename) throws IOException {
-        StringBuilder finalPath = new StringBuilder(outputDir + filename.split(".pdf")[0]);
-        finalPath.append(".csv");
-        FileWriter f = new FileWriter(finalPath.toString());
-        BufferedWriter scriviTabella = new BufferedWriter(f);
+    public void scriviRigheTabella() throws IOException {
+        StringBuilder csvName = new StringBuilder(getNomeFile().split(".pdf")[0]);
+        csvName.append(".csv");
+        StringBuilder outputText = new StringBuilder();
         for (String riga : righeTabella){
-            scriviTabella.write(riga+"\n");
+            outputText.append(riga+"\n");
         }
-        scriviTabella.flush();
+        DocumentsOverviewController.addToFileWriterCsvList(outputText.toString());
+        DocumentsOverviewController.addFilenameToCsvList(csvName.toString());
     }
 
     @Override
@@ -149,15 +152,11 @@ public class EsercizioImpl implements Esercizio {
 
     }
 
-    private static final String SRC = "./src/main/resources/pdfs/";
-    private static final String OUT = "./src/main/resources/csvs/";
-
-
     //Questa funzione esegue il parsing dei dati all'interno della tabella
     public void parsePdf() throws IOException {
         try {
-            String percorsoFileCompleto = SRC+getNomeFile(); //ADATTARE AL FILE CHE ORA é property DELLA CLASSE
-            PdfDocument pdfDoc = new PdfDocument(new PdfReader(percorsoFileCompleto));
+
+            PdfDocument pdfDoc = new PdfDocument(new PdfReader(pdfFile));
             Rectangle rect = new Rectangle(36, 750, 523, 56);
 
             FontFilter fontFilter = new FontFilter(rect);
@@ -182,6 +181,6 @@ public class EsercizioImpl implements Esercizio {
         parsePdf();
         estraiRigheTabella();
         parsaRigheTabella();
-        scriviRigheTabella(); //quando è ok, mettere parametri giusti se li ha
+        scriviRigheTabella();
     }
 }
