@@ -26,12 +26,10 @@ public class EsercizioImpl implements Esercizio {
     private String nomeFile;
     private File pdfFile;
     private ArrayList<String> righeTabella;
+    private ArrayList<String> righeTabellaParsate;
+    private ArrayList<String> parsedPdfRows;
     private StringProperty primaColonna;
     private StringProperty secondaColonna;
-
-    public EsercizioImpl(String nomeFile){
-        this.nomeFile = nomeFile;
-    }
 
     public EsercizioImpl(String nomeFile, File pdfFile){
         this.nomeFile = nomeFile;
@@ -42,8 +40,16 @@ public class EsercizioImpl implements Esercizio {
         return nomeFile;
     }
 
-    public void setRigheTabella(){
+    public void setRigheTabella(ArrayList<String> righeTabella){
         this.righeTabella = righeTabella;
+    }
+
+    public void setRigheTabellaParsate(ArrayList<String> righeTabellaParsate) {
+        this.righeTabellaParsate = righeTabellaParsate;
+    }
+
+    public void setPdfRows(ArrayList<String> parsedPdfRows){
+        this.parsedPdfRows = parsedPdfRows;
     }
 
     public String getPrimaColonna() {
@@ -72,21 +78,21 @@ public class EsercizioImpl implements Esercizio {
 
     @Override
     //Estraggo le righe dalla tabella
-    public ArrayList<String> estraiRigheTabella(ArrayList<String> lista) {
+    public void estraiRigheTabella() {
         ArrayList<String> righeTabella = new ArrayList<String>();
         Integer contatoreRighe = 0;
-        for (String riga : lista){
+        for (String riga : parsedPdfRows){
             String primoElemento = riga.split(" ")[0];
             int numeroRiga = estraiNumeroRiga(primoElemento);
             if (riga.startsWith("# ")){
                 righeTabella.add(riga);
             }
-            else if ((controllaIntero(primoElemento)&& numeroRiga == contatoreRighe+1)){
+            else if ((controllaIntero(primoElemento) && numeroRiga == contatoreRighe+1)){
                 righeTabella.add(riga);
                 contatoreRighe++;
             }
         }
-        return righeTabella;
+        setRigheTabella(righeTabella);
     }
 
     @Override
@@ -104,7 +110,7 @@ public class EsercizioImpl implements Esercizio {
 
     @Override
     //Memorizzo le righe in un ArrayList nella forma dei documenti di tipo csv
-    public ArrayList<String> parsaRigheTabella(ArrayList<String> righeTabella) {
+    public void parsaRigheTabella() {
         StringBuilder nuovaRiga;
         ArrayList<String> righeTabellaParsate = new ArrayList<String>();
         for (String riga : righeTabella){
@@ -116,7 +122,7 @@ public class EsercizioImpl implements Esercizio {
                 righeTabellaParsate.add(riga);
             }
         }
-        return righeTabellaParsate;
+        setRigheTabellaParsate(righeTabellaParsate);
     }
 
     //Controlla se il primo elemento è un intero
@@ -145,17 +151,12 @@ public class EsercizioImpl implements Esercizio {
 
     private static final String SRC = "./src/main/resources/pdfs/";
     private static final String OUT = "./src/main/resources/csvs/";
-    private String filename;
 
-    public void setFilename (String filename){
-        this.filename = filename;
-    }
 
-    public String getOutputDirectory () { return OUT; }
-
-    public ArrayList<String> parsePdf() throws IOException {
+    //Questa funzione esegue il parsing dei dati all'interno della tabella
+    public void parsePdf() throws IOException {
         try {
-            String percorsoFileCompleto = SRC+filename;
+            String percorsoFileCompleto = SRC+getNomeFile(); //ADATTARE AL FILE CHE ORA é property DELLA CLASSE
             PdfDocument pdfDoc = new PdfDocument(new PdfReader(percorsoFileCompleto));
             Rectangle rect = new Rectangle(36, 750, 523, 56);
 
@@ -165,15 +166,22 @@ public class EsercizioImpl implements Esercizio {
             PdfCanvasProcessor parser = new PdfCanvasProcessor(extractionStrategy);
             parser.processPageContent(pdfDoc.getPage(2));
 
-
             String actualText = extractionStrategy.getResultantText();
             ArrayList<String> righeDocumento = new ArrayList<String>(Arrays.asList(actualText.split("\n")));
 
             pdfDoc.close();
-            return righeDocumento;
+            setPdfRows(righeDocumento);
         }catch (NullPointerException e){
             System.out.println("File non trovato.");
             throw e;
         }
+    }
+
+    //Questa funzione esegue la conversione del documento PDF
+    public void processConversion() throws IOException {
+        parsePdf();
+        estraiRigheTabella();
+        parsaRigheTabella();
+        scriviRigheTabella(); //quando è ok, mettere parametri giusti se li ha
     }
 }

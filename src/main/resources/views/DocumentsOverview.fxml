@@ -37,7 +37,7 @@
                   </ButtonBar>
                   <Button layoutX="830.0" layoutY="38.0" mnemonicParsing="false" text="Delete" />
                   <Button layoutX="750.0" layoutY="38.0" mnemonicParsing="false" onAction="#openMultipleButton" text="Find PDF" />
-                  <Button layoutX="900.0" layoutY="38.0" mnemonicParsing="false" text="Start" />
+                  <Button layoutX="900.0" layoutY="38.0" mnemonicParsing="false" onAction="#startConversion" text="Start" />
                </children>
             </AnchorPane>
          </children>

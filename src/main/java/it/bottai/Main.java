@@ -13,13 +13,10 @@ public class Main extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
 
-
     //Questa funziona restituisce uno Stage, un contenitore principale
     public Stage getPrimaryStage() {
         return primaryStage;
     }
-
-
 
     //Questa funzione fa partire l'esecuzione del programma
     @Override
@@ -86,12 +83,7 @@ public class Main extends Application {
         }
     }*/
 
-
-
-
     public static void main(String[] args) {
         launch(args);
     }
-
-
 }
