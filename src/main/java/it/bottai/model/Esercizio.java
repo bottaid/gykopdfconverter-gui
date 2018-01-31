@@ -9,6 +9,4 @@ public interface Esercizio {
     public void estraiRigheTabella();
     public void scriviRigheTabella() throws IOException;
     public void parsaRigheTabella();
-    public StringProperty primaColonnaProperty();
-    public StringProperty secondaColonnaProperty();
 }

@@ -64,24 +64,7 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
-
-
-    /*
-    final Button browseButton = new Button("...");
-        browseButton.setOnAction(new EventHandler<ActionEvent>() {
-
-        @Override
-        public void handle(final ActionEvent e) {
-            final DirectoryChooser directoryChooser = new DirectoryChooser();
-            final File selectedDirectory = directoryChooser.showDialog(primaryStage);
-            if (selectedDirectory != null) {
-                selectedDirectory.getAbsolutePath();
-            }
-        }
-    }*/
 
     public static void main(String[] args) {
         launch(args);

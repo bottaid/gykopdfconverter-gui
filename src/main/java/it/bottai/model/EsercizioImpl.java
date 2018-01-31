@@ -1,24 +1,16 @@
 package it.bottai.model;
 
 import it.bottai.view.DocumentsOverviewController;
-import javafx.beans.property.StringProperty;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfReader;
-import com.itextpdf.kernel.pdf.canvas.parser.EventType;
 import com.itextpdf.kernel.pdf.canvas.parser.PdfCanvasProcessor;
-import com.itextpdf.kernel.pdf.canvas.parser.data.IEventData;
-import com.itextpdf.kernel.pdf.canvas.parser.data.TextRenderInfo;
-import com.itextpdf.kernel.pdf.canvas.parser.filter.TextRegionEventFilter;
 import com.itextpdf.kernel.pdf.canvas.parser.listener.FilteredEventListener;
 import com.itextpdf.kernel.pdf.canvas.parser.listener.LocationTextExtractionStrategy;
 
@@ -29,8 +21,6 @@ public class EsercizioImpl implements Esercizio {
     private ArrayList<String> righeTabella;
     private ArrayList<String> righeTabellaParsate;
     private ArrayList<String> parsedPdfRows;
-    private StringProperty primaColonna;
-    private StringProperty secondaColonna;
 
     public EsercizioImpl(String nomeFile, File pdfFile){
         this.nomeFile = nomeFile;
@@ -52,32 +42,6 @@ public class EsercizioImpl implements Esercizio {
     public void setPdfRows(ArrayList<String> parsedPdfRows){
         this.parsedPdfRows = parsedPdfRows;
     }
-
-    public String getPrimaColonna() {
-        return primaColonna.get();
-    }
-
-    public void setPrimaColonna(String primaColonna) {
-        this.primaColonna.set(primaColonna);
-    }
-
-    public StringProperty primaColonnaProperty() {
-        return primaColonna;
-    }
-
-    public String getSecondaColonna() {
-        return secondaColonna.get();
-    }
-
-    public void setSecondaColonna(String secondaColonna) {
-        this.secondaColonna.set(secondaColonna);
-    }
-
-    public StringProperty secondaColonnaProperty() {
-        return secondaColonna;
-    }
-
-
 
     @Override
     //Estraggo le righe dalla tabella
@@ -115,7 +79,7 @@ public class EsercizioImpl implements Esercizio {
     //Memorizzo le righe in un ArrayList nella forma dei documenti di tipo csv
     public void parsaRigheTabella() {
         StringBuilder nuovaRiga;
-        ArrayList<String> righeTabellaParsate = new ArrayList<String>();
+        righeTabellaParsate = new ArrayList<String>();
         for (String riga : righeTabella){
             if(!riga.startsWith("# ")) {
                 nuovaRiga = new StringBuilder(riga.replace(" ", ";"));

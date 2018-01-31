@@ -2,26 +2,17 @@ package it.bottai.view;
 
 import it.bottai.Main;
 import it.bottai.model.EsercizioImpl;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableListBase;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
 import javafx.stage.FileChooser;
-import javafx.util.Callback;
 
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,6 +44,7 @@ public class DocumentsOverviewController {
     public DocumentsOverviewController() {
     }
 
+    //Aggiunge i nomi dei file csv alla CSVList
     public static void addFilenameToCsvList(String csvNames) {
         csvFilenameList.add(csvNames);
     }
@@ -61,6 +53,7 @@ public class DocumentsOverviewController {
         CSVList.setItems(csvFilenameList);
     }
 
+    //Aggiunge gli output dei csv alla lista dei FileWriter
     public static void addToFileWriterCsvList(String outputText){
         if(outputText != null) {
             fileWriterCsvList.add(outputText);
@@ -68,6 +61,16 @@ public class DocumentsOverviewController {
     }
 
     @FXML
+    //Funzione che svuota PDFList e CSVList
+    protected void clearList(ActionEvent event){
+        PDFList.getItems().clear();
+        CSVList.getItems().clear();
+        documentEsercizioList.clear();
+        fileWriterCsvList.clear();
+    }
+
+    @FXML
+    //Funzione associata al bottone "Save"
     protected void saveCsvList(ActionEvent event) throws FileNotFoundException {
         FileChooser fileSaver = new FileChooser();
         configureFileSaver(fileSaver);
@@ -89,7 +92,7 @@ public class DocumentsOverviewController {
         initPdfListColumn(pdfFileList);
     }
 
-    //Questa funzione si posiziona nella cartella contenente i PDF da analizzare
+    //Questa funzione permette di cercare all'interno delle directory i PDF da convertire
     private void configureFileChooser(final FileChooser fileChooser) throws FileNotFoundException {
         fileChooser.setTitle("View PDF");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -97,6 +100,7 @@ public class DocumentsOverviewController {
         fileChooser.getExtensionFilters().add(filter);
     }
 
+    //Questa funzione apre la schermata per decidere dove salvare i csv generati
     private void configureFileSaver(final FileChooser fileChooser) throws FileNotFoundException {
         fileChooser.setTitle("Save CSV");
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
@@ -104,6 +108,7 @@ public class DocumentsOverviewController {
         fileChooser.getExtensionFilters().add(filter);
     }
 
+    //Funzione per il salvataggio del file
     private void saveFile(File file, String outputText){
         try {
             FileWriter fileWriter = new FileWriter(file);
@@ -112,9 +117,7 @@ public class DocumentsOverviewController {
         } catch (IOException ex) {
             Logger.getLogger(DocumentsOverviewController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
-
 
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
@@ -122,7 +125,6 @@ public class DocumentsOverviewController {
 
     //Questa funzione scandisce i documenti PDF e li aggiunge a PDFList
     public void setPdfDocumentListView(){
-        // Add observable list data to the table
         ObservableList<String> filenameList = FXCollections.observableArrayList();
         for (EsercizioImpl esercizio: documentEsercizioList){
             filenameList.add(esercizio.getNomeFile());
@@ -152,20 +154,6 @@ public class DocumentsOverviewController {
                 } else {
                     System.out.println(filename + " non convertibile.");
                 }
-                            /*
-                String filename = elencoFile[i];
-                System.out.println("Controllo file da analizzare: " +filename);
-                String outputDir = lettoreTabella.getOutputDirectory();
-                if ((filename.startsWith("rom_") || filename.startsWith("power_") || filename.startsWith("sway_")) &&  filename.endsWith(".pdf")){
-                    lettoreTabella.setFilename(filename);
-                    EsercizioDefault esercizio = new EsercizioDefault();
-                    ArrayList<String> righeTabella = esercizio.estraiRigheTabella(lettoreTabella.parsePdf());
-                    righeTabella = esercizio.parsaRigheTabella(righeTabella);
-                    esercizio.scriviRigheTabella(righeTabella, outputDir, filename);
-                }
-                else {
-                    System.out.println(elencoFile[i] + " non convertibile.");
-                }*/
             }
             setFilenameToCsvList();
         } catch (IOException e) {
