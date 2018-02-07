@@ -35,11 +35,6 @@ public class DocumentsOverviewController {
 
     private static ObservableList<String> csvFilenameList = FXCollections.observableArrayList();
 
-    //Questa funzione restituisce i documenti sotto forma di lista
-    public ObservableList<EsercizioImpl> getDocumentEsercizioList() {
-        return documentEsercizioList;
-    }
-
     //Il costruttore che viene chiamato prima di initialize()
     public DocumentsOverviewController() {
     }
@@ -61,12 +56,58 @@ public class DocumentsOverviewController {
     }
 
     @FXML
-    //Funzione che svuota PDFList e CSVList
-    protected void clearList(ActionEvent event){
-        PDFList.getItems().clear();
-        CSVList.getItems().clear();
-        documentEsercizioList.clear();
-        fileWriterCsvList.clear();
+    //Questa funzione associa al bottone "Find PDF" la ricerca di più documenti
+    protected void openMultipleButton(ActionEvent event) throws FileNotFoundException{
+        configureFileChooser(fileChooser);
+        List<File> pdfFileList = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
+        System.out.println(pdfFileList);
+        initPdfListColumn(pdfFileList);
+    }
+
+    //Inizializza la PDFList aggiungendo i PDF da convertire
+    public void initPdfListColumn(List<File> pdfFileList){
+        for (File file : pdfFileList){
+            EsercizioImpl doc = new EsercizioImpl(file.getName(), file);
+            documentEsercizioList.add(doc);
+        }
+        setPdfDocumentListView();
+    }
+
+    //Questa funzione scandisce i documenti PDF e li aggiunge a PDFList
+    public void setPdfDocumentListView(){
+        ObservableList<String> filenameList = FXCollections.observableArrayList();
+        for (EsercizioImpl esercizio: documentEsercizioList){
+            filenameList.add(esercizio.getNomeFile());
+            System.out.println("Elemento inserito");
+        }
+        PDFList.setItems(filenameList);
+    }
+
+    //Questa funzione permette di cercare all'interno delle directory i PDF da convertire
+    private void configureFileChooser(final FileChooser fileChooser) throws FileNotFoundException {
+        fileChooser.setTitle("View PDF");
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("PDF (.pdf)", "*.pdf");
+        fileChooser.getExtensionFilters().add(filter);
+    }
+
+    //Questa funzione fa partire la conversione dei documenti, associata al bottone "Start"
+    public void startConversion(){
+        try {
+            //Analizzo ogni file all'interno della cartella
+            for (EsercizioImpl esercizio : documentEsercizioList) {
+                String filename = esercizio.getNomeFile();
+                System.out.println("Controllo file da analizzare: " + filename);
+                if ((filename.startsWith("rom_") || filename.startsWith("power_") || filename.startsWith("sway_"))) {
+                    esercizio.processConversion();
+                } else {
+                    System.out.println(filename + " non convertibile.");
+                }
+            }
+            setFilenameToCsvList();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -81,23 +122,6 @@ public class DocumentsOverviewController {
                 System.out.println("File salvato con successo.");
             }
         }
-    }
-
-    @FXML
-    //Questa funzione associa al bottone "Find PDF" la ricerca di più documenti
-    protected void openMultipleButton(ActionEvent event) throws FileNotFoundException{
-        configureFileChooser(fileChooser);
-        List<File> pdfFileList = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-        System.out.println(pdfFileList);
-        initPdfListColumn(pdfFileList);
-    }
-
-    //Questa funzione permette di cercare all'interno delle directory i PDF da convertire
-    private void configureFileChooser(final FileChooser fileChooser) throws FileNotFoundException {
-        fileChooser.setTitle("View PDF");
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("PDF (.pdf)", "*.pdf");
-        fileChooser.getExtensionFilters().add(filter);
     }
 
     //Questa funzione apre la schermata per decidere dove salvare i csv generati
@@ -119,45 +143,17 @@ public class DocumentsOverviewController {
         }
     }
 
+    @FXML
+    //Funzione che svuota PDFList e CSVList
+    protected void clearList(ActionEvent event){
+        PDFList.getItems().clear();
+        CSVList.getItems().clear();
+        documentEsercizioList.clear();
+        fileWriterCsvList.clear();
+    }
+
     public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
 
-    //Questa funzione scandisce i documenti PDF e li aggiunge a PDFList
-    public void setPdfDocumentListView(){
-        ObservableList<String> filenameList = FXCollections.observableArrayList();
-        for (EsercizioImpl esercizio: documentEsercizioList){
-            filenameList.add(esercizio.getNomeFile());
-            System.out.println("Elemento inserito");
-        }
-        PDFList.setItems(filenameList);
-    }
-
-    //Inizializza la PDFList aggiungendo i PDF da convertire
-    public void initPdfListColumn(List<File> pdfFileList){
-        for (File file : pdfFileList){
-            EsercizioImpl doc = new EsercizioImpl(file.getName(), file);
-            documentEsercizioList.add(doc);
-        }
-        setPdfDocumentListView();
-    }
-
-    //Questa funzione fa partire la conversione dei documenti, associata al bottone "Start"
-    public void startConversion(){
-        try {
-            //Analizzo ogni file all'interno della cartella
-            for (EsercizioImpl esercizio : documentEsercizioList) {
-                String filename = esercizio.getNomeFile();
-                System.out.println("Controllo file da analizzare: " + filename);
-                if ((filename.startsWith("rom_") || filename.startsWith("power_") || filename.startsWith("sway_"))) {
-                    esercizio.processConversion();
-                } else {
-                    System.out.println(filename + " non convertibile.");
-                }
-            }
-            setFilenameToCsvList();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
